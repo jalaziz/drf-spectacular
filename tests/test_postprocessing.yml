@@ -48,9 +48,20 @@ components:
           $ref: '#/components/schemas/LanguageEnum'
         vote:
           $ref: '#/components/schemas/VoteEnum'
+        available_quality_levels:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableQualityLevelsEnum'
+          readOnly: true
       required:
+      - available_quality_levels
       - language
       - vote
+    AvailableQualityLevelsEnum:
+      enum:
+      - GOOD
+      - BAD
+      type: string
     B:
       type: object
       properties:

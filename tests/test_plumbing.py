@@ -4,8 +4,10 @@ import re
 import sys
 import typing
 from datetime import datetime
+from enum import Enum
 
 import pytest
+from django import __version__ as DJANGO_VERSION
 from django.conf.urls import include
 from django.db import models
 from django.urls import re_path
@@ -89,6 +91,11 @@ class NamedTupleB(typing.NamedTuple):
     b: str
 
 
+class LanguageEnum(Enum):
+    EN = 'en'
+    DE = 'de'
+
+
 TYPE_HINT_TEST_PARAMS = [
     (
         typing.Optional[int],
@@ -132,8 +139,23 @@ TYPE_HINT_TEST_PARAMS = [
     ), (
         typing.Optional[typing.Union[str, int]],
         {'oneOf': [{'type': 'string'}, {'type': 'integer'}], 'nullable': True}
+    ), (
+        LanguageEnum,
+        {'enum': ['en', 'de'], 'type': 'string'}
     )
 ]
+
+if DJANGO_VERSION > '3':
+    from django.db.models.enums import Choices  # only available in Django>3
+
+    class LanguageChoices(Choices):
+        EN = 'en'
+        DE = 'de'
+
+    TYPE_HINT_TEST_PARAMS.append((
+        LanguageChoices,
+        {'enum': ['en', 'de'], 'type': 'string'}
+    ))
 
 if sys.version_info >= (3, 7):
     TYPE_HINT_TEST_PARAMS.append((

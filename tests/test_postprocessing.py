@@ -1,3 +1,4 @@
+import typing
 from enum import Enum
 from unittest import mock
 
@@ -39,9 +40,18 @@ class LanguageChoices(Choices):
     EN = 'en'
 
 
+class QualityEnum(Enum):
+    GOOD = 'GOOD'
+    BAD = 'BAD'
+
+
 class ASerializer(serializers.Serializer):
     language = serializers.ChoiceField(choices=language_choices)
     vote = serializers.ChoiceField(choices=vote_choices)
+    available_quality_levels = serializers.SerializerMethodField()
+
+    def get_available_quality_levels(self, obj) -> typing.List[QualityEnum]:
+        return [QualityEnum.GOOD, QualityEnum.BAD]  # pragma: no cover
 
 
 class BSerializer(serializers.Serializer):
